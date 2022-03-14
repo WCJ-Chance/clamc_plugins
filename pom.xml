@@ -10,11 +10,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>bksdk</module>
-        <module>robotFramework</module>
-        <module>Jmeter</module>
-        <module>MergeRequest</module>
-        <module>SonarQubeQuality</module>
-        <module>StateFlow</module>
+<!--        <module>robotFramework</module>-->
+<!--        <module>Jmeter</module>-->
+<!--        <module>MergeRequest</module>-->
+<!--        <module>SonarQubeQuality</module>-->
+<!--        <module>StateFlow</module>-->
         <module>RepoCorrelator</module>
     </modules>
 
