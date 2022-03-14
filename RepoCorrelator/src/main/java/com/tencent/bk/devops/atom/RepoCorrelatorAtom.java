@@ -3,7 +3,6 @@ package com.tencent.bk.devops.atom;
 import com.tencent.bk.devops.atom.pojo.AtomParam;
 import com.tencent.bk.devops.atom.common.Status;
 import com.tencent.bk.devops.atom.pojo.AtomResult;
-import com.tencent.bk.devops.atom.pojo.DataField;
 import com.tencent.bk.devops.atom.service.GitlabApiService;
 import com.tencent.bk.devops.atom.spi.AtomService;
 import com.tencent.bk.devops.atom.spi.TaskAtom;
@@ -34,17 +33,29 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
         if (result.getStatus() != Status.success) {
             return;
         }
-
         Map<String, String> typeToUrlList = new HashMap<>();
-        GitlabApiService gitlabApiService = new GitlabApiService(
-                atomContext.getSensitiveConfParam("targetGitlabUrl"),
-                atomContext.getSensitiveConfParam("targetGitlabAccessToken"),
-                param.getProjectCnName(),
-                param.getProjectEnName()
-        );
+        GitlabApiService gitlabApiService = null;
+        if (param.getFeatureOption().equals(0)) {
+            gitlabApiService = new GitlabApiService(
+                    atomContext.getSensitiveConfParam("targetGitlabUrl"),
+                    atomContext.getSensitiveConfParam("targetGitlabAccessToken"),
+                    param.getProjectCnName(),
+                    param.getProjectEnName()
+            );
+        } else if (param.getFeatureOption().equals(1)){
+            gitlabApiService = new GitlabApiService(
+                    atomContext.getSensitiveConfParam("targetGitlabUrl"),
+                    atomContext.getSensitiveConfParam("targetGitlabAccessToken"),
+                    param.getProjectCnName(),
+                    param.getProjectEnName(),
+                    param.getRootId()
+            );
+        }
+
+
         if (gitlabApiService.getParentId() == null || gitlabApiService.getBackendId() == null || gitlabApiService.getUiId() == null || gitlabApiService.getTestId() == null) {
             result.setStatus(Status.failure);// 状态设置为失败
-            result.setMessage("群组关联创建失败");
+            result.setMessage("群组关联失败");
             return;
         }
         typeToUrlList.put(gitlabApiService.getBackendId(), param.getBackend());
@@ -107,9 +118,9 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
                         .setPushTags()
                         .setForce(true)
                         .call();
-                logger.info("代码库迁移{}--->{}完毕，请确认!", sourceAddress, targetAddress);
+                logger.info("{} 》》》 {} Over", sourceAddress, targetAddress);
             }
-            logger.info("----------------------------------");
+            logger.info("---------------------------------------------------------------------------");
         }
 
     }

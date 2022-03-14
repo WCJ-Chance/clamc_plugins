@@ -8,6 +8,47 @@
     "target": "java -jar RepoCorrelator-jar-with-dependencies.jar"
   },
   "input": {
+    "featureOption": {
+      "label": "群组结构选项",
+      "default": 0,
+      "type": "enum-input",
+      "list": [
+        {
+          "value": 0,
+          "label": "默认方式",
+          "desc": "项目群组迁移至目标GitLab一级群组下"
+        },
+        {
+          "value": 1,
+          "label": "自定义根群组",
+          "desc": "项目群组迁移至目标GitLab指定群组下"
+        }
+      ],
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "rootId": {
+      "label": "根群组Id",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-input",
+      "desc": "代码库是否迁移到指定群组下，如是，请正确输入；不输入按默认方式建立群组结构",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false,
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": "1"
+          }
+        ]
+      }
+    },
     "projectCnName": {
       "label": "项目中文名",
       "default": "",
@@ -65,10 +106,5 @@
     }
   },
   "output": {
-    "source2DesInfo": {
-      "description": "源仓库地址:目标仓库地址对 每行一个",
-      "type": "string",
-      "isSensitive": false
-    }
   }
 }

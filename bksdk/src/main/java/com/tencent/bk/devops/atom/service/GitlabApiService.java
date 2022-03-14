@@ -64,6 +64,42 @@ public class GitlabApiService {
             }
         }
     }
+    @SneakyThrows
+    public GitlabApiService(String targetGitLabUrl, String targetGitLabAccessToken, String parentName, String parentPath, String rootId) {
+        this.targetGitLabUrl = targetGitLabUrl;
+        this.targetGitLabAccessToken = targetGitLabAccessToken;
+        this.parentPath = parentPath;
+        String pId = searchGroupByPath(parentPath);
+        if (pId == null) { // 父群组不存在
+            logger.info("现在开始创建项目群组···");
+            parentId = createGroup(parentName, parentPath, rootId);
+            backendId = createSubGroup("Backend");
+            uiId = createSubGroup("UI");
+            testId = createSubGroup("Test");
+        }
+        else {
+            logger.info("检测到项目群组已存在");
+            parentId = pId;
+            JsonNode subNode = listSubGroups(parentId);
+            for (JsonNode jn : subNode
+                 ) {
+                String path = jn.get("path").asText();
+                String id = jn.get("id").asText();
+                switch (path) {
+                    case "Backend":
+                        backendId = id;
+                        break;
+                    case "UI":
+                        uiId = id;
+                        break;
+                    case "Test":
+                        testId = id;
+                        break;
+                }
+            }
+        }
+    }
+
 
     @SneakyThrows
     public String searchGroupByPath(String path) {
@@ -105,6 +141,20 @@ public class GitlabApiService {
     }
 
     @SneakyThrows
+    private String createGroup(String name, String path, String rootId) {
+        RequestBody body = RequestBody.create("name=" + name + "&path=" + path + "&parent_id=" + rootId, mediaType);
+        Request request = new Request.Builder()
+                .url(targetGitLabUrl + "/api/v4/groups")
+                .post(body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("PRIVATE-TOKEN", targetGitLabAccessToken)
+                .build();
+        Response res = client.newCall(request).execute();
+        logger.info("createGroup --- POST {}/api/v4/groups name={}&path={}&parent_id={} \n {}", targetGitLabUrl, name, path, rootId, res);
+        return parseJson(res).get("id").asText();
+    }
+
+    @SneakyThrows
     public String createSubGroup(String path) {
         RequestBody body = RequestBody.create("name=" + path + "&path=" + path + "&parent_id=" + parentId, mediaType);
         Request request = new Request.Builder()
@@ -142,8 +192,12 @@ public class GitlabApiService {
         for (JsonNode jn : resBody
              ) {
             String pathWithNamespace = jn.get("path_with_namespace").asText();
-            if (pathWithNamespace.split("/")[0].equals(parentPath)) {
-                return jn.get("http_url_to_repo").asText();
+            String[] pathSlice = pathWithNamespace.split("/");
+            for (String p : pathSlice
+                 ) {
+                if (p.equals(parentPath)) {
+                    return jn.get("http_url_to_repo").asText();
+                }
             }
         }
         return null;
