@@ -1,0 +1,20 @@
+{
+  "atomCode": "Jmeter",
+  "execution": {
+    "packagePath": "Jmeter-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "java -jar Jmeter-jar-with-dependencies.jar"
+  },
+  "input": {
+    "path":{
+      "rule":{},
+      "type":"vuex-input",
+      "required":false,
+      "label":"jmx文件路径",
+      "placeholder":"请填写jmx文件路径，不填则默认为工作空间的根目录",
+      "default":"./"
+    }
+  }
+}

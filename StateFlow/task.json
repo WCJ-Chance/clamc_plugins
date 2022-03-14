@@ -1,0 +1,28 @@
+{
+  "atomCode": "StateFlow",
+  "execution": {
+    "packagePath": "StateFlow-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "java -jar StateFlow-jar-with-dependencies.jar"
+  },
+  "input": {
+    "version":{
+      "rule":{},
+      "type":"vuex-input",
+      "required":true,
+      "label":"产品版本号",
+      "placeholder":"请填写产品版本号，对应协作中的版本号",
+      "default":""
+    },
+    "targetState":{
+      "rule":{},
+      "type":"vuex-input",
+      "required":true,
+      "label":"目标状态",
+      "placeholder":"请填写目标状态",
+      "default":""
+    }
+  }
+}

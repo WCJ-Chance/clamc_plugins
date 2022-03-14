@@ -1,0 +1,105 @@
+{
+  "stage": "DEVELOP",
+  "indicators": {
+    "bugs": {
+      "label": "bugs",
+      "type": "SonarQube",
+      "desc": "bugs",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "new_bugs": {
+      "label": "新增Bugs",
+      "type": "SonarQube",
+      "desc": "新增Bugs",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "vulnerabilities": {
+      "label": "漏洞",
+      "type": "SonarQube",
+      "desc": "漏洞",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "new_vulnerabilities": {
+      "label": "新增漏洞",
+      "type": "SonarQube",
+      "desc": "新增漏洞",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "code_smells": {
+      "label": "异味",
+      "type": "SonarQube",
+      "desc": "异味",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "new_code_smells": {
+      "label": "新增代码异味",
+      "type": "SonarQube",
+      "desc": "新增代码异味",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"INT",
+      "readOnly": false
+    },
+    "coverage": {
+      "label": "覆盖率",
+      "type": "SonarQube",
+      "desc": "覆盖率",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"FLOAT",
+      "readOnly": false
+    },
+    "new_coverage": {
+      "label": "新覆盖率",
+      "type": "SonarQube",
+      "desc": "新覆盖率",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"FLOAT",
+      "readOnly": false
+    },
+    "duplicated_lines_density": {
+      "label": "重复率",
+      "type": "SonarQube",
+      "desc": "重复率",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"FLOAT",
+      "readOnly": false
+    },
+    "new_duplicated_lines_density": {
+      "label": "新代码重复率",
+      "type": "SonarQube",
+      "desc": "新代码重复率",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "LT",
+      "threshold": "10",
+      "valueType":"FLOAT",
+      "readOnly": false
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "atomCode": "MergeRequest",
+  "execution": {
+    "packagePath": "MergeRequest-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "java -jar MergeRequest-jar-with-dependencies.jar"
+  },
+  "input": {
+    "gitUrl": {
+      "label": "代码库地址",
+      "default": "",
+      "placeholder": "请输入代码库地址",
+      "type": "vuex-input",
+      "desc": "代码库地址",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "sourceBranch": {
+      "label": "源分支",
+      "default": "",
+      "placeholder": "请输入源分支",
+      "type": "vuex-input",
+      "desc": "源分支",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "targetBranch": {
+      "label": "目标分支",
+      "default": "",
+      "placeholder": "请输入目标分支",
+      "type": "vuex-input",
+      "desc": "目标分支",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    }
+  }
+}

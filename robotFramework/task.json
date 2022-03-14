@@ -1,0 +1,24 @@
+{
+  "atomCode": "robotFramework",
+  "execution": {
+    "packagePath": "robotFramework-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "java -jar robotFramework-jar-with-dependencies.jar"
+  },
+  "input": {
+
+    "basicPath": {
+      "label": "搜索目录",
+      "default": "",
+      "placeholder": "请输入搜索目录",
+      "type": "vuex-input",
+      "desc": "搜索目录，此插件只会搜索输入目录下的文件（可以不填，默认搜索工作空间）",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    }
+  }
+}

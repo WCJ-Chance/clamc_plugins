@@ -1,0 +1,15 @@
+{
+  "stage": "DEVELOP",
+  "indicators": {
+    "passRate": {
+      "label": "成功率",
+      "type": "RFPassRate",
+      "desc": "测试用例成功率",
+      "availableOp": "LT,LE,EQ,GE,GT",
+      "defaultOp": "GE",
+      "threshold": "0",
+      "valueType": "FLOAT",
+      "readOnly": false
+    }
+  }
+}

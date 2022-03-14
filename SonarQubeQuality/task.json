@@ -1,0 +1,51 @@
+{
+  "atomCode": "SonarQubeQuality",
+  "execution": {
+    "packagePath": "SonarQubeQuality-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "$bk_java_path -jar SonarQubeQuality-jar-with-dependencies.jar -Dfile.encoding=utf8"
+  },
+  "input": {
+    "projectName": {
+      "rule": {},
+      "type": "vuex-input",
+      "required": false,
+      "label": "devops项目标识",
+      "placeholder": "默认为本项目英文简称",
+      "desc": "如bktest",
+      "default": "${projectName}",
+      "hidden": false
+    },
+    "serviceName": {
+      "rule": {},
+      "type": "vuex-input",
+      "required": false,
+      "label": "服务名",
+      "placeholder": "默认为本服务英文简称",
+      "desc": "如financeservice",
+      "default": "${serviceName}",
+      "hidden": false
+    },
+    "sonarQubeIpPort": {
+      "rule": {},
+      "type": "vuex-input",
+      "required": true,
+      "label": "SonarQube服务器ip:port",
+      "placeholder": "请填写SonarQube服务器ip:port，如：192.168.0.132:9000",
+      "desc": "SonarQube服务器ip:port，如：192.168.0.132:9000",
+      "default": "http://192.168.37.114:9000"
+    },
+    "commandPath": {
+      "rule": {},
+      "type": "vuex-input",
+      "required": true,
+      "label": "socanner-scanner安装路径",
+      "placeholder": "请填写socanner-scanner安装路径，如：/data/devops/apps/sonar-scanner/bin/sonar-scanner",
+      "desc": "请填写socanner-scanner安装路径，如：/data/devops/apps/sonar-scanner/bin/sonar-scanner",
+      "default": "/data/devops/apps/sonar-scanner/bin/sonar-scanner",
+      "hidden": true
+    }
+  }
+}
