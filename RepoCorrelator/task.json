@@ -9,19 +9,24 @@
   },
   "input": {
     "featureOption": {
-      "label": "群组结构选项",
+      "label": "迁移类型",
       "default": 0,
       "type": "enum-input",
       "list": [
         {
           "value": 0,
-          "label": "默认方式",
-          "desc": "项目群组迁移至目标GitLab一级群组下"
+          "label": "同步分组及子项目",
+          "desc": "同步分组及子项目"
         },
         {
           "value": 1,
-          "label": "自定义根群组",
+          "label": "同步子项目",
           "desc": "项目群组迁移至目标GitLab指定群组下"
+        },
+        {
+          "value": 2,
+          "label": "同步配置文件",
+          "desc": "同步配置文件"
         }
       ],
       "required": true,
@@ -29,12 +34,77 @@
       "hidden": false,
       "isSensitive": false
     },
+    "sourceGroupUrl": {
+      "label": "源分组url",
+      "default": "",
+      "placeholder": "e.g. http://git.clamc.com/Climb/Business/ITOM",
+      "type": "vuex-input",
+      "desc": "源分组url",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 0
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
     "rootId": {
-      "label": "根群组Id",
+      "label": "目标父分组Id",
       "default": "",
       "placeholder": "",
       "type": "vuex-input",
-      "desc": "代码库是否迁移到指定群组下，如是，请正确输入；不输入按默认方式建立群组结构",
+      "desc": "目标分组的父分组Id, 设为顶层分组 填0",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false,
+      "rely": {
+        "operation": "OR",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 0
+          },
+          {
+            "key": "featureOption",
+            "value": 1
+          }
+        ]
+      }
+    },
+    "repoUrlList": {
+      "label": "某一个分组下的地址列表",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-textarea",
+      "desc": "用于部分代码库更新迁移",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 1
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "ifSetAllConfig": {
+      "label": "",
+      "default": false,
+      "placeholder": "",
+      "type": "atom-checkbox",
+      "text": "是否全量迁移配置文件",
+      "desc": "全量覆盖，谨慎操作",
       "required": false,
       "disabled": false,
       "hidden": false,
@@ -44,62 +114,31 @@
         "expression": [
           {
             "key": "featureOption",
-            "value": 1
+            "value": 2
           }
         ]
       }
     },
-    "projectCnName": {
-      "label": "项目中文名",
-      "default": "",
-      "placeholder": "",
-      "type": "vuex-input",
-      "desc": "请输入项目中文名",
-      "required": true,
-      "disabled": false,
-      "hidden": false,
-      "isSensitive": false
-    },
-    "projectEnName": {
-      "label": "项目英文名",
-      "default": "",
-      "placeholder": "",
-      "type": "vuex-input",
-      "desc": "切勿输错项目英文名！！！",
-      "required": true,
-      "disabled": false,
-      "hidden": false,
-      "isSensitive": false
-    },
-    "backend": {
-      "label": "后端代码库地址列表",
+    "configUrlList": {
+      "label": "要迁移的部分配置文件地址",
       "default": "",
       "placeholder": "",
       "type": "vuex-textarea",
-      "desc": "地址之间用回车分隔",
-      "required": true,
-      "disabled": false,
-      "hidden": false,
-      "isSensitive": false
-    },
-    "ui": {
-      "label": "前端代码库地址列表",
-      "default": "",
-      "placeholder": "",
-      "type": "vuex-textarea",
-      "desc": "地址之间用回车分隔",
-      "required": true,
-      "disabled": false,
-      "hidden": false,
-      "isSensitive": false
-    },
-    "test": {
-      "label": "测试脚本代码库地址列表",
-      "default": "",
-      "placeholder": "",
-      "type": "vuex-textarea",
-      "desc": "地址之间用回车分隔",
-      "required": true,
+      "desc": "用于部分代码库更新迁移",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 2
+          },
+          {
+            "key": "ifSetAllConfig",
+            "value": false
+          }
+        ]
+      },
+      "required": false,
       "disabled": false,
       "hidden": false,
       "isSensitive": false

@@ -11,11 +11,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AtomParam extends AtomBaseParam{
-    private Integer featureOption; // 群组结构选项 0 | 1
+    private Integer featureOption; // 群组结构选项 0 | 1 | 2
+    private String sourceGroupUrl; // 源分组URL
     private String rootId;         // 根群组Id
-    private String projectCnName;  // 项目中文名
-    private String projectEnName;  // 项目英文名
-    private String backend;        // 后端代码库地址列表
-    private String ui;             // 前端代码库地址列表
-    private String test;           // 测试代码库地址列表
+    private String repoUrlList;        // 代码库地址列表
+    private boolean ifSetAllConfig; //是否全量迁移配置文件
+    private String configUrlList; //待迁移部分配置文件列表
 }

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class BaseRequestService {
     private final static Logger logger = LoggerFactory.getLogger(BaseRequestService.class);
     protected String baseUrl = "http://devops.clamc.com";
+//    protected String baseUrl = "http://devops.bktest.com";
     protected String projectName;
     protected String cookie;
 

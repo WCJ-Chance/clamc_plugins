@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 @Data
@@ -51,13 +52,13 @@ public class GitlabApiService {
                 String path = jn.get("path").asText();
                 String id = jn.get("id").asText();
                 switch (path) {
-                    case "Backend":
+                    case "backend":
                         backendId = id;
                         break;
-                    case "UI":
+                    case "ui":
                         uiId = id;
                         break;
-                    case "Test":
+                    case "test":
                         testId = id;
                         break;
                 }
@@ -86,13 +87,13 @@ public class GitlabApiService {
                 String path = jn.get("path").asText();
                 String id = jn.get("id").asText();
                 switch (path) {
-                    case "Backend":
+                    case "backend":
                         backendId = id;
                         break;
-                    case "UI":
+                    case "ui":
                         uiId = id;
                         break;
-                    case "Test":
+                    case "test":
                         testId = id;
                         break;
                 }
@@ -128,7 +129,7 @@ public class GitlabApiService {
 
     @SneakyThrows
     public String createGroup(String name, String path) {
-        RequestBody body = RequestBody.create("name=" + name + "&path=" + path, mediaType);
+        RequestBody body = RequestBody.create("name=" + path + "&path=" + path.toLowerCase(Locale.ROOT) + "&description=" + name, mediaType);
         Request request = new Request.Builder()
                 .url(targetGitLabUrl + "/api/v4/groups")
                 .post(body)
@@ -136,13 +137,13 @@ public class GitlabApiService {
                 .addHeader("PRIVATE-TOKEN", targetGitLabAccessToken)
                 .build();
         Response res = client.newCall(request).execute();
-        logger.info("createGroup --- POST {}/api/v4/groups name={}&path={} \n {}", targetGitLabUrl, name, path, res);
+        logger.info("createGroup --- POST {}/api/v4/groups name={}&path={}&description={} \n {}", targetGitLabUrl, path, path.toLowerCase(Locale.ROOT), name, res);
         return parseJson(res).get("id").asText();
     }
 
     @SneakyThrows
     private String createGroup(String name, String path, String rootId) {
-        RequestBody body = RequestBody.create("name=" + name + "&path=" + path + "&parent_id=" + rootId, mediaType);
+        RequestBody body = RequestBody.create("name=" + path + "&path=" + path.toLowerCase(Locale.ROOT) + "&parent_id=" + rootId + "&description=" + name, mediaType);
         Request request = new Request.Builder()
                 .url(targetGitLabUrl + "/api/v4/groups")
                 .post(body)
@@ -150,13 +151,13 @@ public class GitlabApiService {
                 .addHeader("PRIVATE-TOKEN", targetGitLabAccessToken)
                 .build();
         Response res = client.newCall(request).execute();
-        logger.info("createGroup --- POST {}/api/v4/groups name={}&path={}&parent_id={} \n {}", targetGitLabUrl, name, path, rootId, res);
+        logger.info("createGroup --- POST {}/api/v4/groups name={}&path={}&parent_id={}&description={} \n {}", targetGitLabUrl, path, path.toLowerCase(Locale.ROOT), rootId, name, res);
         return parseJson(res).get("id").asText();
     }
 
     @SneakyThrows
     public String createSubGroup(String path) {
-        RequestBody body = RequestBody.create("name=" + path + "&path=" + path + "&parent_id=" + parentId, mediaType);
+        RequestBody body = RequestBody.create("name=" + path + "&path=" + path.toLowerCase(Locale.ROOT) + "&parent_id=" + parentId, mediaType);
         Request request = new Request.Builder()
                 .url(targetGitLabUrl + "/api/v4/groups")
                 .post(body)
@@ -164,7 +165,7 @@ public class GitlabApiService {
                 .addHeader("PRIVATE-TOKEN", targetGitLabAccessToken)
                 .build();
         Response res = client.newCall(request).execute();
-        logger.info("createSubGroup --- POST {}/api/v4/groups name={}&path={}&parent_id={} \n {}", targetGitLabUrl, path, path, parentId, res);
+        logger.info("createSubGroup --- POST {}/api/v4/groups name={}&path={}&parent_id={} \n {}", targetGitLabUrl, path, path.toLowerCase(Locale.ROOT), parentId, res);
         return parseJson(res).get("id").asText();
     }
 
@@ -204,8 +205,8 @@ public class GitlabApiService {
     }
 
     @SneakyThrows
-    public String createProject(String name, String namespaceId) {
-        RequestBody body = RequestBody.create("name=" + name + "&namespace_id=" + namespaceId + "&undefined="
+    public String createProject(String name, String namespaceId, String description) {
+        RequestBody body = RequestBody.create("name=" + name + "&namespace_id=" + namespaceId + "&description=" + description
                 , mediaType);
         Request request = new Request.Builder()
                 .url(targetGitLabUrl + "/api/v4/projects")
@@ -219,6 +220,31 @@ public class GitlabApiService {
             return resBody.get("http_url_to_repo").asText();
         }
         logger.error("创建代码库{}失败", name);
+        return null;
+    }
+
+
+    /**
+     * 针对git.clamc.com
+     * @param projectName
+     * @return
+     */
+    @SneakyThrows
+    public String getProjectDescription(String projectName, String sourceAddress) {
+        Request request = new Request.Builder()
+                .url("http://git.clamc.com/api/v4/projects?search=" + projectName)
+                .get()
+                .addHeader("PRIVATE-TOKEN", "GgpWEaes2uYEtznios_y")
+                .build();
+        Response res = client.newCall(request).execute();
+        JsonNode resBody = parseJson(res);
+        for (JsonNode jn : resBody
+        ) {
+            String httpUrlToRepo = jn.get("http_url_to_repo").asText();
+            if (httpUrlToRepo.equals(sourceAddress)) {
+                return jn.get("description").asText();
+            }
+        }
         return null;
     }
 
@@ -246,4 +272,6 @@ public class GitlabApiService {
         }
         return null;
     }
+
+
 }

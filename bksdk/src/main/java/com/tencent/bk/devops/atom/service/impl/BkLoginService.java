@@ -57,6 +57,7 @@ public class BkLoginService extends BaseRequestService {
         FormBody formBody = new FormBody.Builder()
                 .add("username", username)
                 .add("password", encrypt(password, publicKey))
+//                .add("password", password)
                 .add("csrfmiddlewaretoken", csrfToken)
                 .add("next", "")
                 .add("app_id", "")

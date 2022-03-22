@@ -52,9 +52,11 @@ public class StateFlowAtom implements TaskAtom<AtomParam> {
 //        }
 
         // 蓝鲸模拟登录
-        BkLoginService bkLoginService = new BkLoginService("http://devops-paas.clamc.com");
+//        BkLoginService bkLoginService = new BkLoginService("http://devops-paas.clamc.com");
+        BkLoginService bkLoginService = new BkLoginService("http://paas.bktest.com");
         // 获取csrfToken
-        String bkToken = bkLoginService.login("devops_api", "1qaz@WSX");
+//        String bkToken = bkLoginService.login("devops_api", "1qaz@WSX");
+        String bkToken = bkLoginService.login("admin", "1qaz@WSX");
         VersionService versionService = new VersionService(param.getProjectName(), bkToken, param.getVersion());
         JsonNode issuesNode = versionService.getVersionIssuesNode();
         logger.info(issuesNode.asText());
