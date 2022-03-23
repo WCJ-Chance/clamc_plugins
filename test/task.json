@@ -1,0 +1,32 @@
+{
+  "atomCode": "test",
+  "execution": {
+    "packagePath": "test-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "java -jar test-jar-with-dependencies.jar"
+  },
+  "input": {
+    "ticketId": {
+      "label": "代码库凭证",
+      "placeholder": "请选中对应凭证",
+      "type": "select-input",
+      "desc": "",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false,
+      "optionsConf": {
+        "searchable": true,
+        "multiple": false,
+        "url": "/ticket/api/user/credentials/{projectId}/hasPermissionList?permission=USE&page=1&pageSize=10000",
+        "paramId": "credentialId",
+        "paramName": "credentialId",
+        "itemTargetUrl": "/console/ticket/{projectId}/",
+        "itemText": "添加新的凭证",
+        "hasAddItem": true
+      }
+    }
+  }
+}

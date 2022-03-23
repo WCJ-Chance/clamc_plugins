@@ -16,6 +16,7 @@
 <!--        <module>SonarQubeQuality</module>-->
 <!--        <module>StateFlow</module>-->
         <module>RepoCorrelator</module>
+<!--        <module>test</module>-->
     </modules>
 
 

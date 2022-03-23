@@ -17,4 +17,10 @@ public class AtomParam extends AtomBaseParam{
     private String repoUrlList;        // 代码库地址列表
     private boolean ifSetAllConfig; //是否全量迁移配置文件
     private String configUrlList; //待迁移部分配置文件列表
+    private String projectChName; // 项目中文名
+    private String projectEnName; // 项目英文名
+    private String backendUrlList; // 后端地址列表
+    private String frontendUrlList; // 前端地址列表
+    private String testUrlList; // 测试地址列表
+
 }

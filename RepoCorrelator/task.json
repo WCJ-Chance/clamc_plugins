@@ -20,13 +20,18 @@
         },
         {
           "value": 1,
-          "label": "同步子项目",
-          "desc": "项目群组迁移至目标GitLab指定群组下"
+          "label": "更新项目",
+          "desc": "更新项目到指定分组下"
         },
         {
           "value": 2,
           "label": "同步配置文件",
-          "desc": "同步配置文件"
+          "desc": "同步或更新配置文件"
+        },
+        {
+          "value": 3,
+          "label": "重构项目群组",
+          "desc": "重构项目群组"
         }
       ],
       "required": true,
@@ -49,7 +54,7 @@
           }
         ]
       },
-      "required": false,
+      "required": true,
       "disabled": false,
       "hidden": false,
       "isSensitive": false
@@ -60,7 +65,7 @@
       "placeholder": "",
       "type": "vuex-input",
       "desc": "目标分组的父分组Id, 设为顶层分组 填0",
-      "required": false,
+      "required": true,
       "disabled": false,
       "hidden": false,
       "isSensitive": false,
@@ -74,16 +79,120 @@
           {
             "key": "featureOption",
             "value": 1
+          },
+          {
+            "key": "featureOption",
+            "value": 3
           }
         ]
       }
+    },
+    "projectChName": {
+      "label": "项目中文名",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-input",
+      "desc": "对应群组描述",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 3
+          }
+        ]
+      },
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "projectEnName": {
+      "label": "项目英文名(大驼峰格式)",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-input",
+      "desc": "对应群组name",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 3
+          }
+        ]
+      },
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "backendUrlList": {
+      "label": "后端地址列表",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-textarea",
+      "desc": "对应群组描述",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 3
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "frontendUrlList": {
+      "label": "前端地址列表",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-textarea",
+      "desc": "对应群组描述",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 3
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "testUrlList": {
+      "label": "测试地址列表",
+      "default": "",
+      "placeholder": "",
+      "type": "vuex-textarea",
+      "desc": "对应群组描述",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "featureOption",
+            "value": 3
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
     },
     "repoUrlList": {
       "label": "某一个分组下的地址列表",
       "default": "",
       "placeholder": "",
       "type": "vuex-textarea",
-      "desc": "用于部分代码库更新迁移",
+      "desc": "用于部分代码库更新",
       "rely": {
         "operation": "AND",
         "expression": [
@@ -93,7 +202,7 @@
           }
         ]
       },
-      "required": false,
+      "required": true,
       "disabled": false,
       "hidden": false,
       "isSensitive": false
@@ -138,7 +247,7 @@
           }
         ]
       },
-      "required": false,
+      "required": true,
       "disabled": false,
       "hidden": false,
       "isSensitive": false

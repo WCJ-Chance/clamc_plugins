@@ -95,14 +95,17 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
                 }
             }
             pullAndPush(workSpace, sourceToTargetHttpUrlMap, sourceGitlabAccessToken, targetGitlabAccessToken);
-            logger.info("分组及子项目同步成功！");
+            logger.info("项目更新成功！");
             result.setStatus(Status.success);
-            result.setMessage("分组及子项目同步成功！");
+            result.setMessage("项目同步成功！");
         }
         else if (param.getFeatureOption().equals(2)) {
             if (param.isIfSetAllConfig()) {
                 Group climbConfig = sourceGitLabApi.getGroupApi().getGroup("ClimbConfig");
                 dfs("0", sourceGitLabApi, targetGitLabApi, climbConfig, sourceToTargetHttpUrlMap, result);
+                if (sourceToTargetHttpUrlMap.containsKey("http://git.clamc.com/Climb/Base/Report.git")) {
+                    sourceToTargetHttpUrlMap.remove("http://git.clamc.com/Climb/Base/Report.git");
+                }
                 pullAndPush(workSpace, sourceToTargetHttpUrlMap, sourceGitlabAccessToken, targetGitlabAccessToken);
                 logger.info("配置文件代码库全量迁移成功!");
                 result.setStatus(Status.success);
@@ -121,14 +124,67 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
                 }
             }
             pullAndPush(workSpace, sourceToTargetHttpUrlMap, sourceGitlabAccessToken, targetGitlabAccessToken);
-            logger.info("部分配置文件代码库同步成功!");
+            logger.info("部分配置文件代码库更新成功!");
             result.setStatus(Status.success);
-            result.setMessage("部分配置文件代码库同步成功!");
+            result.setMessage("部分配置文件代码库更新成功!");
+        }
+        else if (param.getFeatureOption().equals(3)) {
+            GroupParams groupParams = new GroupParams();
+            if (!param.getRootId().equals("0")) {
+                logger.info("创建顶层分组");
+                groupParams.withParentId(Integer.valueOf(param.getRootId()))
+                        .withName(param.getProjectEnName())
+                        .withPath(param.getProjectEnName().toLowerCase(Locale.ROOT))
+                        .withDescription(param.getProjectChName());
+            } else {
+                logger.info("创建子分组");
+                groupParams.withName(param.getProjectEnName())
+                        .withPath(param.getProjectEnName().toLowerCase(Locale.ROOT))
+                        .withDescription(param.getProjectChName());
+            }
+            Group targetParentGroup = targetGitLabApi.getGroupApi().createGroup(groupParams);
+            logger.info("分组创建成功");
+            Integer targetParentId = targetParentGroup.getId();
+            logger.info("目标分组的ID={}", targetParentId);
+            Map<String, String> typeToUrlList = new HashMap<>();
+            typeToUrlList.put("Backend", param.getBackendUrlList());
+            typeToUrlList.put("UI", param.getFrontendUrlList());
+            typeToUrlList.put("Test", param.getTestUrlList());
+
+            for (Map.Entry<String, String> entry : typeToUrlList.entrySet()
+                 ) {
+                logger.info("key: {}, value: {}", entry.getKey(), entry.getValue());
+                Group targetTypeGroup = targetGitLabApi.getGroupApi().createGroup(
+                        new GroupParams().withName(entry.getKey()).withPath(entry.getKey().toLowerCase(Locale.ROOT)).withParentId(targetParentId));
+                String targetTypeGroupFullPath = targetTypeGroup.getFullPath();
+                String pattern = "http://.*\\.git";
+                Pattern p = Pattern.compile(pattern);
+                Matcher m = p.matcher(entry.getValue());
+                while (m.find()) {
+                    String pattern1 = "http://git\\.clamc\\.com/(.*)\\.git";
+                    Pattern p1 = Pattern.compile(pattern1);
+                    Matcher m1 = p1.matcher(m.group());
+                    if (m1.find()) {
+                        logger.info("源地址FullPath={}", m1.group(1));
+                        Project sourceProject = sourceGitLabApi.getProjectApi().getProject(m1.group(1));
+                        Project targetProject = targetGitLabApi.getProjectApi().createProject(
+                                new Project().withNamespaceId(targetTypeGroup.getId())
+                                        .withName(sourceProject.getName())
+                                        .withPath(sourceProject.getPath().toLowerCase(Locale.ROOT))
+                                        .withDescription(sourceProject.getDescription())
+                        );
+                        sourceToTargetHttpUrlMap.put(m.group(), targetProject.getHttpUrlToRepo());
+                    }
+                }
+            }
+            pullAndPush(workSpace, sourceToTargetHttpUrlMap, sourceGitlabAccessToken, targetGitlabAccessToken);
         }
     }
 
     @SneakyThrows
     public static void pullAndPush(String workSpace, Map<String, String> sourceToTargetHttpUrlMap, CredentialsProvider sourceGitlabAccessToken, CredentialsProvider targetGitlabAccessToken) {
+        File workspace = new File(workSpace);
+        clearWorkspace(workspace);
         int i = 1;
         for (Map.Entry<String, String> entry : sourceToTargetHttpUrlMap.entrySet()
         ) {
