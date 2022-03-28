@@ -43,12 +43,11 @@ public class TestAtom implements TaskAtom<AtomParam> {
         if (result.getStatus() != Status.success) {
             return;
         }
+
         CredentialApi credentialApi = new CredentialApi();
         Result<Map<String, String>> result1 = credentialApi.getCredential(param.getTicketId());
-        while (result1.isOk()) {
-            logger.info(result1.getData().get("access_token"));
-            result1 = credentialApi.getCredential(param.getTicketId());
-        }
+        logger.info(result1.getData().get("username"));
+        logger.info(result1.getData().get("password"));
     }
 
     /**

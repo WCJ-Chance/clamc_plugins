@@ -15,6 +15,7 @@ import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +55,7 @@ public class MergeRequestAtom implements TaskAtom<AtomParam> {
                 "PRIVATE-TOKEN",
                 atomContext.getSensitiveConfParam("gitlabAccessToken")
         );
-//        Collection<String> branchesToClone = new ArrayList<>();
-//        branchesToClone.add(param.getSourceBranch());
-//        branchesToClone.add(param.getTargetBranch());
+
         File workSpace = new File(param.getBkWorkspace());
         clearWorkspace(workSpace);
         logger.info("Cloning from " + param.getGitUrl() + " to " + param.getBkWorkspace());
@@ -67,15 +66,20 @@ public class MergeRequestAtom implements TaskAtom<AtomParam> {
                      .call();
         logger.info("Having repository: {}", git.getRepository().getDirectory());
         logger.info("Starting pull source branch···");
-        git.checkout()
-                .setName(param.getSourceBranch())
-                .setCreateBranch(true)
-                .setStartPoint("origin/" + param.getSourceBranch())
-                .call();
-        git.pull()
-                .setCredentialsProvider(gitlabAccessToken)
-                .setRemote("origin")
-                .call();
+        if (param.getSourceBranch().equals("master")) {
+            logger.info("Having source branch master···");
+        } else {
+            git.checkout()
+                    .setName(param.getSourceBranch())
+                    .setCreateBranch(true)
+                    .setStartPoint("origin/" + param.getSourceBranch())
+                    .call();
+            git.pull()
+                    .setCredentialsProvider(gitlabAccessToken)
+                    .setRemote("origin")
+                    .call();
+        }
+
         logger.info("Listing local branches:");
         List<Ref> refs = git.branchList().call();
         for (Ref ref : refs
@@ -84,7 +88,19 @@ public class MergeRequestAtom implements TaskAtom<AtomParam> {
         }
         Repository repository = new FileRepository(param.getBkWorkspace() + "/.git");
         logger.info("Switching to target branch:");
-        git.checkout().setName(param.getTargetBranch()).call();
+        if (param.getSourceBranch().equals("master")) {
+            git.checkout()
+                    .setName(param.getTargetBranch())
+                    .setCreateBranch(true)
+                    .setStartPoint("origin/" + param.getTargetBranch())
+                    .call();
+            git.pull()
+                    .setCredentialsProvider(gitlabAccessToken)
+                    .setRemote("origin")
+                    .call();
+        } else {
+            git.checkout().setName(param.getTargetBranch()).call();
+        }
         logger.info("Current branch is {}", git.getRepository().getFullBranch());
         ObjectId mergeBase = repository.resolve(param.getSourceBranch());
         logger.info("Starting merge···");

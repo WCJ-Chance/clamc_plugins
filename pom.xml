@@ -12,11 +12,13 @@
         <module>bksdk</module>
 <!--        <module>robotFramework</module>-->
 <!--        <module>Jmeter</module>-->
-<!--        <module>MergeRequest</module>-->
+        <module>MergeRequest</module>
 <!--        <module>SonarQubeQuality</module>-->
 <!--        <module>StateFlow</module>-->
-        <module>RepoCorrelator</module>
+<!--        <module>RepoCorrelator</module>-->
 <!--        <module>test</module>-->
+<!--        <module>DockerBuildAndPushImage</module>-->
+<!--        <module>checkout</module>-->
     </modules>
 
 

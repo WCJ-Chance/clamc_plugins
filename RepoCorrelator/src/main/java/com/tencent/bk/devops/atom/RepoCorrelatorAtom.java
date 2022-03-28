@@ -131,13 +131,13 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
         else if (param.getFeatureOption().equals(3)) {
             GroupParams groupParams = new GroupParams();
             if (!param.getRootId().equals("0")) {
-                logger.info("创建顶层分组");
+                logger.info("创建子分组");
                 groupParams.withParentId(Integer.valueOf(param.getRootId()))
                         .withName(param.getProjectEnName())
                         .withPath(param.getProjectEnName().toLowerCase(Locale.ROOT))
                         .withDescription(param.getProjectChName());
             } else {
-                logger.info("创建子分组");
+                logger.info("创建顶层分组");
                 groupParams.withName(param.getProjectEnName())
                         .withPath(param.getProjectEnName().toLowerCase(Locale.ROOT))
                         .withDescription(param.getProjectChName());
@@ -156,7 +156,6 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
                 logger.info("key: {}, value: {}", entry.getKey(), entry.getValue());
                 Group targetTypeGroup = targetGitLabApi.getGroupApi().createGroup(
                         new GroupParams().withName(entry.getKey()).withPath(entry.getKey().toLowerCase(Locale.ROOT)).withParentId(targetParentId));
-                String targetTypeGroupFullPath = targetTypeGroup.getFullPath();
                 String pattern = "http://.*\\.git";
                 Pattern p = Pattern.compile(pattern);
                 Matcher m = p.matcher(entry.getValue());
@@ -173,6 +172,7 @@ public class RepoCorrelatorAtom implements TaskAtom<AtomParam> {
                                         .withPath(sourceProject.getPath().toLowerCase(Locale.ROOT))
                                         .withDescription(sourceProject.getDescription())
                         );
+                        logger.info("已创建目标群组{}---描述为{}", targetProject.getPathWithNamespace(), targetProject.getDescription());
                         sourceToTargetHttpUrlMap.put(m.group(), targetProject.getHttpUrlToRepo());
                     }
                 }

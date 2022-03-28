@@ -9,7 +9,7 @@
   },
   "input": {
     "ticketId": {
-      "label": "代码库凭证",
+      "label": "凭证",
       "placeholder": "请选中对应凭证",
       "type": "select-input",
       "desc": "",
